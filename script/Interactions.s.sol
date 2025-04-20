@@ -6,12 +6,12 @@ import {Script, console} from "forge-std/Script.sol";
 import {DevOpsTools} from "foundry-devops/src/DevOpsTools.sol";
 import {FundMe} from "../src/FundMe.sol";
 
-contract FundFundMe {
-    uint256 constant FUND_VALUE = 0.01 ether;
+contract FundFundMe is Script {
+    uint256 constant FUND_VALUE = 6 ether;
     function fundTheFundMe(address mostRecentlyDeployed) public {
-        vm.startBroadcast();
+        console.log("Funder is: %s", msg.sender);
         FundMe(payable(mostRecentlyDeployed)).fund{value: FUND_VALUE}();
-        vm.stopBroadcast();
+
         console.log("FundMe contract is funded with: %s", FUND_VALUE);
     }
 
@@ -20,6 +20,8 @@ contract FundFundMe {
             "FundMe",
             block.chainid
         );
+        vm.startBroadcast();
         fundTheFundMe(mostRecentlyDeployed);
+        vm.stopBroadcast();
     }
 }
